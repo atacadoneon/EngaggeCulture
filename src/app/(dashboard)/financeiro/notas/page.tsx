@@ -3,7 +3,8 @@
 
 import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
-import { Plus, FileText } from "lucide-react";
+import { Plus, FileText, Upload } from "lucide-react";
+import { ImportadorCSV } from "@/components/ui/importador-csv";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Tabs } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -57,7 +58,29 @@ export default function PaginaNotas() {
       <Breadcrumbs itens={[{ label: "Financeiro" }, { label: "Notas Fiscais" }]} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Notas Fiscais</h1>
-        <Button onClick={() => setModalAberto(true)}><Plus className="h-4 w-4" />Nova Nota</Button>
+        <div className="flex gap-2">
+          <ImportadorCSV
+            titulo="Notas Fiscais"
+            colunas={[
+              { campo: "numero", rotulo: "Numero", obrigatorio: true },
+              { campo: "tipo", rotulo: "Tipo", obrigatorio: true },
+              { campo: "fornecedor", rotulo: "Fornecedor" },
+              { campo: "valor", rotulo: "Valor", obrigatorio: true },
+              { campo: "data_emissao", rotulo: "Data Emissao", obrigatorio: true },
+              { campo: "chave_acesso", rotulo: "Chave Acesso" },
+            ]}
+            exemploCSV="NF-001;entrada;Fornecedor X;2500.00;2026-04-10;35260412345678000100550010000000011123456789"
+            onImportar={async (registros) => {
+              let sucesso = 0; let erros = 0;
+              for (const r of registros) {
+                try { await criarNota({ numero: r.numero, tipo: r.tipo || "entrada", fornecedor: r.fornecedor, valor: parseFloat(r.valor), data_emissao: r.data_emissao, chave_acesso: r.chave_acesso }); sucesso++; } catch { erros++; }
+              }
+              carregar();
+              return { sucesso, erros };
+            }}
+          />
+          <Button onClick={() => setModalAberto(true)}><Plus className="h-4 w-4" />Nova Nota</Button>
+        </div>
       </div>
 
       <Tabs itens={[

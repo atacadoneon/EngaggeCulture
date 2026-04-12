@@ -3,7 +3,8 @@
 
 import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
-import { Plus, Building, Search } from "lucide-react";
+import { Plus, Building, Search, Upload } from "lucide-react";
+import { ImportadorCSV } from "@/components/ui/importador-csv";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -67,7 +68,33 @@ export default function PaginaClientes() {
       <Breadcrumbs itens={[{ label: "Administracao" }, { label: "Clientes e Parceiros" }]} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Clientes e Parceiros</h1>
-        <Button onClick={() => setModalAberto(true)}><Plus className="h-4 w-4" />Novo Cliente</Button>
+        <div className="flex gap-2">
+          <ImportadorCSV
+            titulo="Clientes"
+            colunas={[
+              { campo: "nome", rotulo: "Nome", obrigatorio: true },
+              { campo: "email", rotulo: "Email" },
+              { campo: "empresa_nome", rotulo: "Empresa" },
+              { campo: "telefone", rotulo: "Telefone" },
+              { campo: "cidade", rotulo: "Cidade" },
+              { campo: "estado", rotulo: "Estado" },
+            ]}
+            exemploCSV="Maria Santos;maria@parceiro.com;Parceiro X;(11)98888-0000;Sao Paulo;SP"
+            onImportar={async (registros) => {
+              let sucesso = 0; let erros = 0;
+              for (const r of registros) {
+                try {
+                  await criarClienteExterno({ nome: r.nome, email: r.email, empresa_nome: r.empresa_nome, telefone: r.telefone,
+                    endereco: r.cidade ? { cidade: r.cidade, estado: r.estado } : undefined });
+                  sucesso++;
+                } catch { erros++; }
+              }
+              carregar();
+              return { sucesso, erros };
+            }}
+          />
+          <Button onClick={() => setModalAberto(true)}><Plus className="h-4 w-4" />Novo Cliente</Button>
+        </div>
       </div>
 
       <SearchInput valor={busca} onChange={setBusca} placeholder="Buscar por nome, email ou empresa..." className="max-w-md" />

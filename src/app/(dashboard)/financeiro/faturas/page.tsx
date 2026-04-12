@@ -3,7 +3,8 @@
 
 import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
-import { Plus, DollarSign, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { Plus, DollarSign, AlertTriangle, CheckCircle, Clock, Upload } from "lucide-react";
+import { ImportadorCSV } from "@/components/ui/importador-csv";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Tabs } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -75,7 +76,28 @@ export default function PaginaFaturas() {
 
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Contas a Pagar</h1>
-        <Button onClick={() => setModalAberto(true)}><Plus className="h-4 w-4" />Nova Fatura</Button>
+        <div className="flex gap-2">
+          <ImportadorCSV
+            titulo="Faturas"
+            colunas={[
+              { campo: "descricao", rotulo: "Descricao", obrigatorio: true },
+              { campo: "categoria", rotulo: "Categoria", obrigatorio: true },
+              { campo: "valor", rotulo: "Valor", obrigatorio: true },
+              { campo: "vencimento", rotulo: "Vencimento", obrigatorio: true },
+              { campo: "nota_fiscal", rotulo: "Nota Fiscal" },
+            ]}
+            exemploCSV="Fulfillment Abril;fulfillment;1500.00;2026-05-15;NF-001"
+            onImportar={async (registros) => {
+              let sucesso = 0; let erros = 0;
+              for (const r of registros) {
+                try { await criarFatura({ descricao: r.descricao, categoria: r.categoria || "outro", valor: parseFloat(r.valor), vencimento: r.vencimento, nota_fiscal: r.nota_fiscal }); sucesso++; } catch { erros++; }
+              }
+              carregar();
+              return { sucesso, erros };
+            }}
+          />
+          <Button onClick={() => setModalAberto(true)}><Plus className="h-4 w-4" />Nova Fatura</Button>
+        </div>
       </div>
 
       {/* Stats */}

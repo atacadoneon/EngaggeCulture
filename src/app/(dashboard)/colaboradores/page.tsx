@@ -12,7 +12,8 @@ import { SearchInput } from "@/components/ui/search-input";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Paginacao } from "@/components/ui/paginacao";
 import { Dropdown } from "@/components/ui/dropdown";
-import { listarColaboradores } from "@/lib/supabase/queries/colaboradores";
+import { ImportadorCSV } from "@/components/ui/importador-csv";
+import { listarColaboradores, criarColaborador } from "@/lib/supabase/queries/colaboradores";
 import { Edit, Trash2, Eye } from "lucide-react";
 
 const POR_PAGINA = 20;
@@ -49,7 +50,28 @@ export default function PaginaColaboradores() {
       <Breadcrumbs itens={[{ label: "Administracao" }, { label: "Colaboradores" }]} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Colaboradores</h1>
-        <Link href="/colaboradores/novo"><Button><Plus className="h-4 w-4" />Novo Colaborador</Button></Link>
+        <div className="flex gap-2">
+          <ImportadorCSV
+            titulo="Colaboradores"
+            colunas={[
+              { campo: "nome", rotulo: "Nome", obrigatorio: true },
+              { campo: "email", rotulo: "Email", obrigatorio: true },
+              { campo: "cargo", rotulo: "Cargo" },
+              { campo: "departamento", rotulo: "Departamento" },
+              { campo: "telefone", rotulo: "Telefone" },
+            ]}
+            exemploCSV="Joao Silva;joao@empresa.com;Vendedor;Comercial;(11)99999-0000"
+            onImportar={async (registros) => {
+              let sucesso = 0; let erros = 0;
+              for (const r of registros) {
+                try { await criarColaborador({ nome: r.nome, email: r.email, cargo: r.cargo }); sucesso++; } catch { erros++; }
+              }
+              carregar();
+              return { sucesso, erros };
+            }}
+          />
+          <Link href="/colaboradores/novo"><Button><Plus className="h-4 w-4" />Novo Colaborador</Button></Link>
+        </div>
       </div>
 
       <div className="flex items-center justify-between">
