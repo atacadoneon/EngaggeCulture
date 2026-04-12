@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Star, Calendar, Sparkles, MessageCircle, ThumbsUp, Send, Award, TrendingUp, Users, Smile, Meh, Frown, Flame, ChevronRight, Crown } from "lucide-react";
+import { Heart, Star, Calendar, Sparkles, MessageCircle, ThumbsUp, Send, Award, TrendingUp, Users, Smile, Meh, Frown, Flame, ChevronRight, Crown, Building, Target, Eye, Briefcase, MapPin, Globe, Phone, Mail, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -116,27 +116,137 @@ export default function PaginaCultura() {
         </div>
       </div>
 
-      {/* DNA DA EMPRESA — Missao, Visao, Negocio, Diferenciais */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 border-l-4 border-l-violet-500">
-          <p className="text-[10px] text-violet-400 font-bold uppercase tracking-wider mb-2">Missao</p>
-          <p className="text-sm text-white leading-relaxed">Transformar cultura organizacional em sistema mensuravel que gamifica, reconhece e premia resultado real.</p>
-        </Card>
-        <Card className="p-5 border-l-4 border-l-amber-500">
-          <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-2">Visao</p>
-          <p className="text-sm text-white leading-relaxed">Ser o sistema operacional de cultura de toda empresa seria no Brasil ate 2028.</p>
-        </Card>
-        <Card className="p-5 border-l-4 border-l-emerald-500">
-          <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mb-2">Negocio</p>
-          <p className="text-sm text-white leading-relaxed">Plataforma SaaS de cultura, gamificacao e fulfillment de premiacoes corporativas.</p>
-        </Card>
-        <Card className="p-5 border-l-4 border-l-rose-500">
-          <p className="text-[10px] text-rose-400 font-bold uppercase tracking-wider mb-2">Diferenciais</p>
-          <ul className="text-sm text-white space-y-1">
-            <li className="flex items-center gap-1.5"><Star className="h-3 w-3 text-rose-400 shrink-0" />Gamificacao conectada a resultado real</li>
-            <li className="flex items-center gap-1.5"><Star className="h-3 w-3 text-rose-400 shrink-0" />Fulfillment fisico proprio</li>
-            <li className="flex items-center gap-1.5"><Star className="h-3 w-3 text-rose-400 shrink-0" />Cultura que se mede, nao se adivinha</li>
-          </ul>
+      {/* ============================================ */}
+      {/* SOBRE A EMPRESA — Conteudo completo */}
+      {/* ============================================ */}
+
+      {/* Identidade da Empresa */}
+      <div className="relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/5 via-transparent to-amber-600/5" />
+        <div className="relative z-10 p-6">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-violet-600 to-violet-500 flex items-center justify-center">
+              <Building className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white">{sessao?.empresa.nome || "Engagge Culture"}</h2>
+              <p className="text-sm text-zinc-400">Plataforma de cultura organizacional, gamificacao e fulfillment</p>
+              <div className="flex items-center gap-4 mt-1">
+                <span className="flex items-center gap-1 text-xs text-zinc-500"><MapPin className="h-3 w-3" />Brasil</span>
+                <span className="flex items-center gap-1 text-xs text-zinc-500"><Users className="h-3 w-3" />45 colaboradores</span>
+                <span className="flex items-center gap-1 text-xs text-zinc-500"><Globe className="h-3 w-3" />engaggeculture.com</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Missao, Visao, Negocio, Diferenciais */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-zinc-800/50 rounded-xl p-4 border-l-4 border-l-violet-500">
+              <div className="flex items-center gap-2 mb-2">
+                <Target className="h-4 w-4 text-violet-400" />
+                <p className="text-xs text-violet-400 font-bold uppercase tracking-wider">Missao</p>
+              </div>
+              <p className="text-sm text-zinc-200 leading-relaxed">Transformar cultura organizacional em sistema mensuravel que gamifica, reconhece e premia resultado real.</p>
+            </div>
+            <div className="bg-zinc-800/50 rounded-xl p-4 border-l-4 border-l-amber-500">
+              <div className="flex items-center gap-2 mb-2">
+                <Eye className="h-4 w-4 text-amber-400" />
+                <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">Visao</p>
+              </div>
+              <p className="text-sm text-zinc-200 leading-relaxed">Ser o sistema operacional de cultura de toda empresa seria no Brasil ate 2028.</p>
+            </div>
+            <div className="bg-zinc-800/50 rounded-xl p-4 border-l-4 border-l-emerald-500">
+              <div className="flex items-center gap-2 mb-2">
+                <Briefcase className="h-4 w-4 text-emerald-400" />
+                <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Negocio</p>
+              </div>
+              <p className="text-sm text-zinc-200 leading-relaxed">Plataforma SaaS de cultura, gamificacao e fulfillment de premiacoes corporativas com vertical integration.</p>
+            </div>
+            <div className="bg-zinc-800/50 rounded-xl p-4 border-l-4 border-l-rose-500">
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="h-4 w-4 text-rose-400" />
+                <p className="text-xs text-rose-400 font-bold uppercase tracking-wider">Diferenciais</p>
+              </div>
+              <ul className="text-sm text-zinc-200 space-y-1.5">
+                <li className="flex items-start gap-1.5"><span className="text-rose-400 mt-0.5">•</span>Gamificacao conectada a resultado real via API</li>
+                <li className="flex items-start gap-1.5"><span className="text-rose-400 mt-0.5">•</span>Fulfillment fisico proprio (Engagge Placas)</li>
+                <li className="flex items-start gap-1.5"><span className="text-rose-400 mt-0.5">•</span>Cultura que se mede, nao se adivinha</li>
+                <li className="flex items-start gap-1.5"><span className="text-rose-400 mt-0.5">•</span>6 modulos integrados em 1 plataforma</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Numeros da empresa */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-5">
+            {[
+              { label: "Colaboradores", valor: "45", icone: Users, cor: "text-violet-400" },
+              { label: "Clientes Ativos", valor: "180", icone: Building, cor: "text-emerald-400" },
+              { label: "Premiacoes/Mes", valor: "1.200+", icone: Award, cor: "text-amber-400" },
+              { label: "Reconhecimentos", valor: "3.400+", icone: Heart, cor: "text-rose-400" },
+              { label: "Satisfacao", valor: "92%", icone: Smile, cor: "text-cyan-400" },
+            ].map((n, i) => {
+              const Icone = n.icone;
+              return (
+                <div key={i} className="bg-zinc-800/50 rounded-xl p-3 text-center">
+                  <Icone className={cn("h-4 w-4 mx-auto mb-1", n.cor)} />
+                  <p className="text-lg font-bold text-white">{n.valor}</p>
+                  <p className="text-[10px] text-zinc-500 uppercase">{n.label}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ORGANOGRAMA DA EMPRESA */}
+      <div>
+        <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+          <Users className="h-5 w-5 text-violet-400" /> Organograma
+        </h2>
+        <Card className="p-6">
+          {/* CEO */}
+          <div className="flex flex-col items-center">
+            <div className="bg-gradient-to-br from-violet-600 to-purple-600 rounded-2xl p-4 text-center w-56 border border-violet-500/30 shadow-lg shadow-violet-500/10">
+              <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-2 text-lg font-bold text-white">EL</div>
+              <p className="text-sm font-bold text-white">Everton Lauxen</p>
+              <p className="text-[10px] text-violet-200">CEO / Fundador</p>
+            </div>
+
+            {/* Linha vertical */}
+            <div className="w-px h-8 bg-zinc-700" />
+
+            {/* Linha horizontal */}
+            <div className="w-full max-w-3xl h-px bg-zinc-700 relative">
+              <div className="absolute left-[10%] -top-px w-px h-8 bg-zinc-700" />
+              <div className="absolute left-[30%] -top-px w-px h-8 bg-zinc-700" />
+              <div className="absolute left-[50%] -top-px w-px h-8 bg-zinc-700" />
+              <div className="absolute left-[70%] -top-px w-px h-8 bg-zinc-700" />
+              <div className="absolute left-[90%] -top-px w-px h-8 bg-zinc-700" />
+            </div>
+
+            {/* Departamentos */}
+            <div className="grid grid-cols-5 gap-3 w-full max-w-3xl mt-8">
+              {[
+                { nome: "Ana Carolina", cargo: "Head Comercial", depto: "Comercial", avatar: "AC", cor: "from-blue-600 to-cyan-600", membros: 8 },
+                { nome: "Rafael Oliveira", cargo: "Head Tech", depto: "Tecnologia", avatar: "RO", cor: "from-emerald-600 to-teal-600", membros: 6 },
+                { nome: "Mariana Costa", cargo: "Head Marketing", depto: "Marketing", avatar: "MC", cor: "from-pink-600 to-rose-600", membros: 4 },
+                { nome: "Thiago Lima", cargo: "Head Operacoes", depto: "Operacoes", avatar: "TL", cor: "from-amber-600 to-orange-600", membros: 5 },
+                { nome: "Fernanda Dias", cargo: "Head RH", depto: "RH", avatar: "FD", cor: "from-violet-600 to-purple-600", membros: 3 },
+              ].map((d, i) => (
+                <div key={i} className="text-center">
+                  <div className={cn("rounded-xl p-3 bg-gradient-to-br border border-zinc-700/50", d.cor)}>
+                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-1.5 text-xs font-bold text-white">{d.avatar}</div>
+                    <p className="text-xs font-bold text-white">{d.nome}</p>
+                    <p className="text-[9px] text-white/70">{d.cargo}</p>
+                  </div>
+                  <div className="mt-2 bg-zinc-800 rounded-lg px-2 py-1">
+                    <p className="text-[10px] font-semibold text-zinc-300">{d.depto}</p>
+                    <p className="text-[9px] text-zinc-500">{d.membros} pessoas</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </Card>
       </div>
 
