@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CreditCard, ShoppingBag, Star, Heart, Zap, Check, Eye, CheckCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { usarToast } from "@/components/ui/toast";
+import { listarProdutos } from "@/lib/supabase/queries/loja";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -60,11 +61,29 @@ export default function PaginaLoja() {
   const toast = usarToast();
   const { sessao } = usarSessao();
   const [busca, setBusca] = useState("");
-  const [produtoSelecionado, setProdutoSelecionado] = useState<typeof PRODUTOS_DEMO[0] | null>(null);
+  const [produtoSelecionado, setProdutoSelecionado] = useState<any>(null);
   const [favoritos, setFavoritos] = useState<Set<string>>(new Set());
   const [resgatando, setResgatando] = useState(false);
+  const [produtosDB, setProdutosDB] = useState<any[]>([]);
 
-  const filtrados = PRODUTOS_DEMO.filter((p) =>
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const data = await listarProdutos();
+        if (data && data.length > 0) setProdutosDB(data);
+      } catch {}
+    }
+    carregar();
+  }, []);
+
+  // Usa dados do banco se existirem, senao usa demo
+  const produtosBase = produtosDB.length > 0 ? produtosDB.map((p: any) => ({
+    id: p.id, nome: p.nome, descricao: p.descricao, imagem: p.imagem_url,
+    custo_pontos: p.custo_pontos || 0, categoria: p.categoria, estoque: p.estoque,
+    avaliacao: 4.8, vendidos: 0,
+  })) : PRODUTOS_DEMO;
+
+  const filtrados = produtosBase.filter((p: any) =>
     p.nome.toLowerCase().includes(busca.toLowerCase())
   );
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { listarJornadas } from "@/lib/supabase/queries/jornadas";
 import { Plus, BookOpen, Edit, Eye, Trash2, Copy, ArrowLeft, Upload, Video, FileText, HelpCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Tabs } from "@/components/ui/tabs";
@@ -31,10 +32,28 @@ export default function PaginaAdminTreinamentos() {
   const [abaAtiva, setAbaAtiva] = useState("todas");
   const [busca, setBusca] = useState("");
   const [pagina, setPagina] = useState(1);
+  const [trilhasDB, setTrilhasDB] = useState<any[]>([]);
 
-  const filtradas = TRILHAS_ADMIN
-    .filter((t) => abaAtiva === "todas" || t.status === abaAtiva)
-    .filter((t) => t.nome.toLowerCase().includes(busca.toLowerCase()));
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const data = await listarJornadas({});
+        if (data && data.length > 0) setTrilhasDB(data.map((j: any) => ({
+          id: j.id, nome: j.nome, categoria: j.tipo || "Treinamento",
+          modulos: j.total_pontos ? Math.ceil(j.total_pontos / 50) : 0,
+          status: j.status === "ativa" ? "publicada" : j.status,
+          participantes: 0, criada_em: j.criado_em?.split("T")[0] || "",
+        })));
+      } catch {}
+    }
+    carregar();
+  }, []);
+
+  const trilhasBase = trilhasDB.length > 0 ? trilhasDB : TRILHAS_ADMIN;
+
+  const filtradas = trilhasBase
+    .filter((t: any) => abaAtiva === "todas" || t.status === abaAtiva)
+    .filter((t: any) => t.nome.toLowerCase().includes(busca.toLowerCase()));
 
   return (
     <div className="space-y-5">
@@ -126,10 +145,19 @@ export default function PaginaAdminTreinamentos() {
                   <td className="px-5 py-3 text-sm text-zinc-500">{new Date(t.criada_em + "T12:00:00").toLocaleDateString("pt-BR")}</td>
                   <td className="px-5 py-3">
                     <Dropdown itens={[
-                      { label: "Editar modulos", icone: Edit, onClick: () => {} },
-                      { label: "Ver preview", icone: Eye, onClick: () => {} },
-                      { label: "Duplicar", icone: Copy, onClick: () => {} },
-                      { label: "Excluir", icone: Trash2, onClick: () => {}, perigo: true },
+                      { label: "Editar modulos", icone: Edit, onClick: () => { window.location.href = `/treinamentos/admin/nova-trilha?id=${t.id}`; } },
+                      { label: "Ver preview", icone: Eye, onClick: () => { window.location.href = `/treinamentos/${t.id}`; } },
+                      { label: "Duplicar", icone: Copy, onClick: () => { /* TODO: duplicar trilha */ } },
+                      { label: "Excluir", icone: Trash2, onClick: async () => {
+                        if (confirm(`Excluir trilha "${t.nome}"?`)) {
+                          try {
+                            const { criarClienteNavegador } = await import("@/lib/supabase/client");
+                            const supabase = criarClienteNavegador();
+                            await supabase.from("jornadas").delete().eq("id", t.id);
+                            window.location.reload();
+                          } catch {}
+                        }
+                      }, perigo: true },
                     ]} />
                   </td>
                 </tr>

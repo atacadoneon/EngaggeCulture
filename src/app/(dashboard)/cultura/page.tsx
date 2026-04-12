@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usarToast } from "@/components/ui/toast";
+import { listarValores, listarReconhecimentos, buscarComportamentoSemana, listarFeed } from "@/lib/supabase/queries/cultura";
 import { Heart, Star, Calendar, Sparkles, MessageCircle, ThumbsUp, Send, Award, TrendingUp, Users, Smile, Meh, Frown, Flame, ChevronRight, Crown, Building, Target, Eye, Briefcase, MapPin, Globe, Phone, Mail, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -70,6 +71,28 @@ export default function PaginaCultura() {
   const toast = usarToast();
   const [reconhecimentoTexto, setReconhecimentoTexto] = useState("");
   const [enviandoReconhecimento, setEnviandoReconhecimento] = useState(false);
+  const [valoresDB, setValoresDB] = useState<any[]>([]);
+  const [reconhecimentosDB, setReconhecimentosDB] = useState<any[]>([]);
+  const [feedDB, setFeedDB] = useState<any[]>([]);
+  const [comportamentoSemanaDB, setComportamentoSemanaDB] = useState<any>(null);
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const [v, r, f, cs] = await Promise.all([
+          listarValores(),
+          listarReconhecimentos(10),
+          listarFeed(10),
+          buscarComportamentoSemana(),
+        ]);
+        setValoresDB(v || []);
+        setReconhecimentosDB(r || []);
+        setFeedDB(f || []);
+        setComportamentoSemanaDB(cs);
+      } catch {}
+    }
+    carregar();
+  }, []);
   const [feedCurtidas, setFeedCurtidas] = useState<Set<string>>(new Set());
 
   function toggleCurtida(id: string) {

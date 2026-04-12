@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { listarJornadas } from "@/lib/supabase/queries/jornadas";
 import { GraduationCap, Sparkles, BookOpen, Trophy, Flame } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Tabs } from "@/components/ui/tabs";
@@ -53,7 +54,24 @@ export default function PaginaTreinamentos() {
   const [abaAtiva, setAbaAtiva] = useState("todas");
   const [busca, setBusca] = useState("");
 
-  const trilhas = TRILHAS_DEMO;
+  const [trilhasDB, setTrilhasDB] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const data = await listarJornadas({ tipo: "treinamento" });
+        if (data && data.length > 0) setTrilhasDB(data.map((j: any) => ({
+          id: j.id, nome: j.nome, descricao: j.descricao, categoria: "Treinamento",
+          total_modulos: j.total_pontos ? Math.ceil(j.total_pontos / 50) : 5,
+          modulos_concluidos: 0, pontos_total: j.total_pontos || 0,
+          duracao_estimada: "", obrigatoria: j.obrigatoria,
+        })));
+      } catch {}
+    }
+    carregar();
+  }, []);
+
+  const trilhas = trilhasDB.length > 0 ? trilhasDB : TRILHAS_DEMO;
   const filtradas = trilhas
     .filter((t) => {
       if (abaAtiva === "em_andamento") return t.modulos_concluidos > 0 && t.modulos_concluidos < t.total_modulos;

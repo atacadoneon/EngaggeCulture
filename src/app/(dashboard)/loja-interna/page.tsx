@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { listarCatalogo } from "@/lib/supabase/queries/loja-interna";
 import { Store, ShoppingCart, Package, Star, Eye, Heart, Truck, Shield, Clock, Check, Plus, Minus, CheckCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Card } from "@/components/ui/card";
@@ -34,7 +35,24 @@ export default function PaginaLojaInterna() {
   const totalCarrinho = carrinho.totalItens();
   const valorCarrinho = carrinho.totalValor();
 
-  const filtrados = CATALOGO_DEMO.filter((p) => p.nome.toLowerCase().includes(busca.toLowerCase()));
+  const [catalogoDB, setCatalogoDB] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const data = await listarCatalogo();
+        if (data && data.length > 0) setCatalogoDB(data.map((p: any) => ({
+          id: p.id, nome: p.nome, descricao: p.descricao, imagem: p.imagem_url,
+          preco: Number(p.preco), preco_promocional: p.preco_promocional ? Number(p.preco_promocional) : null,
+          categoria: p.categoria, estoque: p.estoque_disponivel || 99, avaliacao: 4.8, vendidos: 0, sku: p.sku || "",
+        })));
+      } catch {}
+    }
+    carregar();
+  }, []);
+
+  const catalogoBase = catalogoDB.length > 0 ? catalogoDB : CATALOGO_DEMO;
+  const filtrados = catalogoBase.filter((p: any) => p.nome.toLowerCase().includes(busca.toLowerCase()));
 
   function toggleFavorito(id: string) {
     setFavoritos((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; });

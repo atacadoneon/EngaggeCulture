@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Target, Plus, Trophy, Flame, Sparkles, Zap, Crown, Clock, ChevronRight, Star, Users, TrendingUp, Swords, Gift, CheckCircle, Lock, Medal, Timer, ArrowRight, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -9,9 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usarPermissao } from "@/hooks/usar-permissao";
 import { usarSessao } from "@/hooks/usar-sessao";
+import { usarToast } from "@/components/ui/toast";
+import { SkeletonCards } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { listarJornadas, listarDesafios, listarMissoes, concluirMissao } from "@/lib/supabase/queries/jornadas";
 import { cn } from "@/lib/utils";
 
-// Demo data
+// Demo data (fallback quando banco vazio)
 const DESAFIO_ATIVO = {
   nome: "Operacao Foguete — Abril",
   descricao: "Quem fatura mais no mes leva o trofeu e R$ 500 em premios",
@@ -53,7 +57,29 @@ const JORNADAS_ATIVAS = [
 export default function PaginaGamificacao() {
   const { eGestor } = usarPermissao();
   const { sessao } = usarSessao();
+  const toast = usarToast();
   const [missoes, setMissoes] = useState(MISSOES_HOJE);
+  const [jornadasDB, setJornadasDB] = useState<any[]>([]);
+  const [desafiosDB, setDesafiosDB] = useState<any[]>([]);
+  const [missoesDB, setMissoesDB] = useState<any[]>([]);
+  const [carregandoDB, setCarregandoDB] = useState(true);
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const [j, d, m] = await Promise.all([
+          listarJornadas({ status: "ativa" }),
+          listarDesafios({ status: "ativo" }),
+          listarMissoes(),
+        ]);
+        setJornadasDB(j || []);
+        setDesafiosDB(d || []);
+        setMissoesDB(m || []);
+      } catch {}
+      setCarregandoDB(false);
+    }
+    carregar();
+  }, []);
 
   const missoesConcluidas = missoes.filter((m) => m.concluida).length;
   const missoesTotal = missoes.length;

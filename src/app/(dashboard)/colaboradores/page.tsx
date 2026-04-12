@@ -119,9 +119,17 @@ export default function PaginaColaboradores() {
                   <td className="px-5 py-3"><Badge cor={STATUS_COR[c.status] || "zinc"}>{c.status}</Badge></td>
                   <td className="px-5 py-3">
                     <Dropdown itens={[
-                      { label: "Ver detalhes", icone: Eye, onClick: () => {} },
-                      { label: "Editar", icone: Edit, onClick: () => {} },
-                      { label: "Desativar", icone: Trash2, onClick: () => {}, perigo: true },
+                      { label: "Ver detalhes", icone: Eye, onClick: () => { window.location.href = `/colaboradores/novo?id=${c.id}`; } },
+                      { label: "Editar", icone: Edit, onClick: () => { window.location.href = `/colaboradores/novo?id=${c.id}`; } },
+                      { label: "Desativar", icone: Trash2, onClick: async () => {
+                        if (confirm(`Deseja desativar ${c.nome}?`)) {
+                          try {
+                            const { atualizarColaborador } = await import("@/lib/supabase/queries/colaboradores");
+                            await atualizarColaborador(c.id, { status: "inativo" } as any);
+                            carregar();
+                          } catch {}
+                        }
+                      }, perigo: true },
                     ]} />
                   </td>
                 </tr>
