@@ -1,6 +1,7 @@
 "use client";
 
-import { Target, Plus, Trophy, Flame } from "lucide-react";
+import { Target, Plus, Trophy, Flame, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { usarPermissao } from "@/hooks/usar-permissao";
 
 export default function PaginaGamificacao() {
@@ -14,10 +15,19 @@ export default function PaginaGamificacao() {
           <p className="text-zinc-400 mt-1">Jornadas, desafios e missoes</p>
         </div>
         {eGestor && (
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors">
-            <Plus className="h-4 w-4" />
-            Nova Jornada
-          </button>
+          <div className="flex gap-2">
+            <Link
+              href="/gamificacao/criar"
+              className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              <Sparkles className="h-4 w-4" />
+              Criar com IA
+            </Link>
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors">
+              <Plus className="h-4 w-4" />
+              Nova Jornada
+            </button>
+          </div>
         )}
       </div>
 
