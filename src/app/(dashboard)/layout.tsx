@@ -9,7 +9,7 @@ export default function LayoutDashboard({
   return (
     <div className="min-h-screen bg-zinc-950">
       <Sidebar />
-      <div className="ml-64">
+      <div className="ml-56">
         <Header />
         <main className="p-6">{children}</main>
       </div>
