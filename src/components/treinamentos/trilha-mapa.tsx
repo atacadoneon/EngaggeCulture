@@ -135,7 +135,7 @@ export function TrilhaMapa({ modulos, onModuloClick }: TrilhaMapaProps) {
                       )}
                       <div className="flex items-center gap-1">
                         <Zap className="h-3 w-3 text-amber-400" />
-                        <span className="text-[10px] font-bold text-amber-400">{modulo.pontos} XP</span>
+                        <span className="text-[10px] font-bold text-amber-400">{modulo.pontos} pts</span>
                       </div>
                       {eConcluido && modulo.nota !== undefined && (
                         <div className="flex items-center gap-0.5">

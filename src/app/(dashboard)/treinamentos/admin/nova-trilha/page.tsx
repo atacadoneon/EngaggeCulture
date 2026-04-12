@@ -142,7 +142,7 @@ export default function PaginaNovaTrilha() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-white">Modulos ({modulos.length})</h2>
-              <p className="text-sm text-zinc-500">Total: {totalPontos} XP</p>
+              <p className="text-sm text-zinc-500">Total: {totalPontos} pts</p>
             </div>
             <Button type="button" tamanho="sm" onClick={adicionarModulo}>
               <Plus className="h-4 w-4" /> Adicionar Modulo
@@ -177,7 +177,7 @@ export default function PaginaNovaTrilha() {
                     </p>
                     <div className="flex items-center gap-2">
                       <Badge cor="zinc">{modulo.tipo}</Badge>
-                      <span className="text-[10px] text-amber-400 font-bold">{modulo.pontos} XP</span>
+                      <span className="text-[10px] text-amber-400 font-bold">{modulo.pontos} pts</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -212,7 +212,7 @@ export default function PaginaNovaTrilha() {
                         opcoes={TIPOS_MODULO.map((t) => ({ valor: t.valor, texto: t.texto }))} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Input rotulo="Pontos (XP)" type="number" value={String(modulo.pontos)}
+                      <Input rotulo="Pontos" type="number" value={String(modulo.pontos)}
                         onChange={(e) => atualizarModulo(modulo.id, "pontos", parseInt(e.target.value) || 0)} />
                       <Input rotulo="Duracao estimada" value={modulo.duracao}
                         onChange={(e) => atualizarModulo(modulo.id, "duracao", e.target.value)}

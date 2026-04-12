@@ -101,7 +101,7 @@ export function CardTrilha({
             )}
             <div className="flex items-center gap-1">
               <Zap className="h-3.5 w-3.5 text-amber-400" />
-              <span className="text-xs font-bold text-amber-400">{pontos_total} XP</span>
+              <span className="text-xs font-bold text-amber-400">{pontos_total} pts</span>
             </div>
           </div>
 

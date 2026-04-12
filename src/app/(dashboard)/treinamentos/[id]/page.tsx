@@ -67,8 +67,8 @@ export default function PaginaDetalheTrilha() {
         </Card>
         <Card className="p-3 text-center">
           <Zap className="h-5 w-5 text-amber-400 mx-auto mb-1" />
-          <p className="text-lg font-bold text-amber-400">{totalXP}/{totalXPPossivel}</p>
-          <p className="text-[10px] text-zinc-500 uppercase">XP</p>
+          <p className="text-lg font-bold text-amber-400">{totalXP}/{totalXPPossivel} pts</p>
+          <p className="text-[10px] text-zinc-500 uppercase">Pontos</p>
         </Card>
         <Card className="p-3 text-center">
           <Clock className="h-5 w-5 text-blue-400 mx-auto mb-1" />
@@ -107,7 +107,7 @@ export default function PaginaDetalheTrilha() {
               </Badge>
               <div className="flex items-center gap-1">
                 <Zap className="h-4 w-4 text-amber-400" />
-                <span className="text-sm font-bold text-amber-400">{modalModulo.pontos} XP</span>
+                <span className="text-sm font-bold text-amber-400">{modalModulo.pontos} pts</span>
               </div>
               {modalModulo.duracao && (
                 <div className="flex items-center gap-1">

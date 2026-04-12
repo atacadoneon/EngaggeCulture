@@ -15,7 +15,7 @@ interface StatsTreinamentoProps {
 export function StatsTreinamento({ totalXP, trilhasConcluidas, trilhasEmAndamento, horasEstudo, sequenciaDias, certificados }: StatsTreinamentoProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-      <StatCard icone={Zap} label="XP Total" valor={totalXP.toLocaleString("pt-BR")} cor="text-amber-400" bgCor="bg-amber-500/10" />
+      <StatCard icone={Zap} label="Pontos Total" valor={totalXP.toLocaleString("pt-BR")} cor="text-amber-400" bgCor="bg-amber-500/10" />
       <StatCard icone={Flame} label="Sequencia" valor={`${sequenciaDias} dias`} cor="text-orange-400" bgCor="bg-orange-500/10" />
       <StatCard icone={Trophy} label="Concluidas" valor={String(trilhasConcluidas)} cor="text-emerald-400" bgCor="bg-emerald-500/10" />
       <StatCard icone={BookOpen} label="Em Andamento" valor={String(trilhasEmAndamento)} cor="text-violet-400" bgCor="bg-violet-500/10" />

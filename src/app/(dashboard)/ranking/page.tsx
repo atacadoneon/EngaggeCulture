@@ -24,7 +24,7 @@ const RANKING_DEMO = [
 ];
 
 const CATEGORIAS_RANKING = [
-  { id: "pontos", label: "XP Total", icone: Zap, campo: "pontos" },
+  { id: "pontos", label: "Pontos Total", icone: Zap, campo: "pontos" },
   { id: "reconhecimentos", label: "Reconhecimentos", icone: Heart, campo: "reconhecimentos" },
   { id: "streak", label: "Sequencia", icone: Flame, campo: "streak" },
   { id: "treinamentos", label: "Treinamentos", icone: GraduationCap, campo: "treinamentos" },
@@ -80,7 +80,7 @@ export default function PaginaRanking() {
             </div>
             <div className="flex items-center gap-6">
               <div className="text-center"><p className="text-2xl font-bold text-violet-400">#{minhaPosicao}</p><p className="text-[10px] text-zinc-500 uppercase">Posicao</p></div>
-              <div className="text-center"><p className="text-2xl font-bold text-amber-400">{sessao.colaborador.saldo_pontos.toLocaleString("pt-BR")}</p><p className="text-[10px] text-zinc-500 uppercase">XP</p></div>
+              <div className="text-center"><p className="text-2xl font-bold text-amber-400">{sessao.colaborador.saldo_pontos.toLocaleString("pt-BR")}</p><p className="text-[10px] text-zinc-500 uppercase">Pontos</p></div>
             </div>
           </div>
         </Card>
@@ -157,10 +157,10 @@ export default function PaginaRanking() {
               <th className="px-5 py-3 w-8"></th>
               <th className="px-5 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Colaborador</th>
               <th className="px-5 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Equipe</th>
-              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><Zap className="h-3 w-3 text-amber-400" />XP</div></th>
-              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><Heart className="h-3 w-3 text-rose-400" />Recog</div></th>
-              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><Flame className="h-3 w-3 text-orange-400" />Streak</div></th>
-              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><GraduationCap className="h-3 w-3 text-blue-400" />Treino</div></th>
+              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><Zap className="h-3 w-3 text-amber-400" />Pontos</div></th>
+              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><Heart className="h-3 w-3 text-rose-400" />Reconhecimentos</div></th>
+              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><Flame className="h-3 w-3 text-orange-400" />Sequencia</div></th>
+              <th className="px-5 py-3 text-center text-xs font-semibold text-zinc-400 uppercase"><div className="flex items-center justify-center gap-1"><GraduationCap className="h-3 w-3 text-blue-400" />Treinamentos</div></th>
             </tr></thead>
             <tbody>
               {restante.map((r, i) => {
@@ -186,7 +186,7 @@ export default function PaginaRanking() {
                     <td className="px-5 py-3"><Badge cor="zinc">{r.equipe}</Badge></td>
                     <td className="px-5 py-3 text-center"><span className="text-sm font-bold text-amber-400">{r.pontos.toLocaleString("pt-BR")}</span></td>
                     <td className="px-5 py-3 text-center"><span className="text-sm text-rose-400">{r.reconhecimentos}</span></td>
-                    <td className="px-5 py-3 text-center"><div className="flex items-center justify-center gap-1"><Flame className={cn("h-3.5 w-3.5", r.streak >= 7 ? "text-orange-400" : "text-zinc-600")} /><span className={cn("text-sm font-bold", r.streak >= 7 ? "text-orange-400" : "text-zinc-400")}>{r.streak}d</span></div></td>
+                    <td className="px-5 py-3 text-center"><div className="flex items-center justify-center gap-1"><Flame className={cn("h-3.5 w-3.5", r.streak >= 7 ? "text-orange-400" : "text-zinc-600")} /><span className={cn("text-sm font-bold", r.streak >= 7 ? "text-orange-400" : "text-zinc-400")}>{r.streak} dias</span></div></td>
                     <td className="px-5 py-3 text-center"><span className="text-sm text-blue-400">{r.treinamentos}</span></td>
                   </tr>
                 );
