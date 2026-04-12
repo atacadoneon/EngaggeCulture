@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SeletorDestinatarios, type Destinatario } from "@/components/envios/seletor-destinatarios";
 import { SeletorProduto } from "@/components/envios/seletor-produto";
 import { criarEnvio, criarEnvioLote } from "@/lib/supabase/queries/envios";
@@ -84,6 +85,7 @@ export default function PaginaNovoEnvio() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
+          <Breadcrumbs itens={[{ label: "Operacao" }, { label: "Envios", href: "/envios" }, { label: "Novo Envio" }]} />
           <h1 className="text-xl font-bold text-white">Novo Envio</h1>
           <p className="text-zinc-400 text-sm">Selecione destinatarios, produto e confirme</p>
         </div>

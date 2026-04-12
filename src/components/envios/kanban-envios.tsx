@@ -154,7 +154,7 @@ export function KanbanEnvios({ envios, onAtualizar }: KanbanEnviosProps) {
       await atualizarStatusEnvio(id, novoStatus);
       onAtualizar();
     } catch (error: any) {
-      alert("Erro: " + error.message);
+      console.error("Erro ao mover envio:", error.message);
     }
   }
 

@@ -6,6 +6,7 @@ import { Package, Plus, FileSpreadsheet, Clock, Truck, CheckCircle, AlertTriangl
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { KanbanEnvios } from "@/components/envios/kanban-envios";
 import { listarEnvios, buscarStatsEnvios } from "@/lib/supabase/queries/envios";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,7 @@ export default function PaginaEnvios() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
+          <Breadcrumbs itens={[{ label: "Operacao" }, { label: "Central de Envios" }]} />
           <h1 className="text-2xl font-bold text-white">Central de Envios</h1>
           <p className="text-zinc-400 mt-1">Gerencie todos os envios de premios e kits</p>
         </div>
