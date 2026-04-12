@@ -40,8 +40,8 @@ const MENU_ITEMS: ItemMenu[] = [
 ];
 
 const MENU_ADMIN: ItemMenu[] = [
+  { nome: "Envios", href: "/envios", icone: Package, apenasGestor: true },
   { nome: "Colaboradores", href: "/configuracoes/colaboradores", icone: Users, apenasGestor: true },
-  { nome: "Fulfillment", href: "/configuracoes/fulfillment", icone: Package, apenasGestor: true },
   { nome: "Relatorios", href: "/configuracoes/relatorios", icone: BarChart3, apenasGestor: true },
   { nome: "Configuracoes", href: "/configuracoes", icone: Settings, apenasAdmin: true },
 ];
