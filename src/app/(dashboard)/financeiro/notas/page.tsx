@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { Plus, FileText } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -17,6 +19,7 @@ import { listarNotas, criarNota } from "@/lib/supabase/queries/financeiro";
 const POR_PAGINA = 15;
 
 export default function PaginaNotas() {
+  const toast = usarToast();
   const [notas, setNotas] = useState<any[]>([]);
   const [abaAtiva, setAbaAtiva] = useState("todas");
   const [pagina, setPagina] = useState(1);
@@ -45,7 +48,7 @@ export default function PaginaNotas() {
       await criarNota({ numero: fNum, tipo: fTipo, fornecedor: fForn || undefined, valor: parseFloat(fValor), data_emissao: fData, chave_acesso: fChave || undefined });
       setModalAberto(false); setFNum(""); setFValor(""); setFData(""); setFForn(""); setFChave("");
       carregar();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: any) { toast.erro("Erro", err.message); }
     setSalvando(false);
   }
 

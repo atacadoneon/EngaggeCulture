@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -58,6 +60,7 @@ function parsearCSV(texto: string): RegistroPlanilha[] {
 }
 
 export default function PaginaImportarPlanilha() {
+  const toast = usarToast();
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [registros, setRegistros] = useState<RegistroPlanilha[]>([]);
@@ -86,10 +89,10 @@ export default function PaginaImportarPlanilha() {
 
     try {
       const resultado = await criarEnviosPlanilha({ registros: validos });
-      alert(`${resultado.total} envios criados com sucesso!`);
+      toast.sucesso(`${resultado.total} envios criados com sucesso!`);
       router.push("/envios");
     } catch (error: any) {
-      alert("Erro: " + error.message);
+      toast.erro("Erro", error.message);
     }
 
     setEnviando(false);

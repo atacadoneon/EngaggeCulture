@@ -82,10 +82,48 @@ export default function PaginaNovaTrilha() {
   async function handleSalvar(e: React.FormEvent) {
     e.preventDefault();
     setSalvando(true);
-    // TODO: salvar no banco via queries
-    setTimeout(() => {
+    try {
+      const supabase = (await import("@/lib/supabase/client")).criarClienteNavegador();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Nao autenticado");
+      const { data: colab } = await supabase.from("colaboradores").select("id, empresa_id").eq("auth_user_id", user.id).single();
+      if (!colab) throw new Error("Empresa nao encontrada");
+
+      // Criar jornada
+      const { data: jornada, error: errJornada } = await supabase.from("jornadas").insert({
+        empresa_id: colab.empresa_id,
+        nome,
+        descricao,
+        tipo: "treinamento",
+        status: "ativa",
+        obrigatoria,
+        total_pontos: totalPontos,
+        criado_por: colab.id,
+      }).select().single();
+
+      if (errJornada) throw errJornada;
+
+      // Criar etapas
+      for (const [i, modulo] of modulos.entries()) {
+        if (!modulo.titulo.trim()) continue;
+        await supabase.from("etapas_jornada").insert({
+          jornada_id: jornada.id,
+          ordem: i + 1,
+          titulo: modulo.titulo,
+          descricao: modulo.descricao,
+          tipo: modulo.tipo,
+          pontos: modulo.pontos,
+          obrigatoria: modulo.obrigatoria,
+          prazo_dias: modulo.duracao ? parseInt(modulo.duracao) || null : null,
+        });
+      }
+
       router.push("/treinamentos/admin");
-    }, 1000);
+    } catch (err: any) {
+      const toast = (await import("@/components/ui/toast")).usarToast;
+      console.error("Erro ao salvar trilha:", err);
+    }
+    setSalvando(false);
   }
 
   return (

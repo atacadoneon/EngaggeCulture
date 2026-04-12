@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Plus, Search, Users, Building } from "lucide-react";
@@ -13,6 +15,7 @@ import { listarColaboradores } from "@/lib/supabase/queries/colaboradores";
 import { cn } from "@/lib/utils";
 
 export default function PaginaDestinatarios() {
+  const toast = usarToast();
   const [aba, setAba] = useState<"colaboradores" | "clientes">("clientes");
   const [clientes, setClientes] = useState<ClienteExterno[]>([]);
   const [colaboradores, setColaboradores] = useState<any[]>([]);
@@ -62,7 +65,7 @@ export default function PaginaDestinatarios() {
       setFRua(""); setFCidade(""); setFEstado(""); setFCep(""); setFTags("");
       carregar();
     } catch (error: any) {
-      alert(error.message);
+      toast.erro("Erro", error.message);
     }
     setSalvando(false);
   }

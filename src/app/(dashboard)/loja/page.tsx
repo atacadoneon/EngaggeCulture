@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { CreditCard, ShoppingBag, Star, Heart, Zap, Check, Eye } from "lucide-react";
+import { CreditCard, ShoppingBag, Star, Heart, Zap, Check, Eye, CheckCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { usarToast } from "@/components/ui/toast";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,10 +57,12 @@ const PRODUTOS_DEMO = [
 ];
 
 export default function PaginaLoja() {
+  const toast = usarToast();
   const { sessao } = usarSessao();
   const [busca, setBusca] = useState("");
   const [produtoSelecionado, setProdutoSelecionado] = useState<typeof PRODUTOS_DEMO[0] | null>(null);
   const [favoritos, setFavoritos] = useState<Set<string>>(new Set());
+  const [resgatando, setResgatando] = useState(false);
 
   const filtrados = PRODUTOS_DEMO.filter((p) =>
     p.nome.toLowerCase().includes(busca.toLowerCase())
@@ -273,11 +276,23 @@ export default function PaginaLoja() {
                 </p>
               </div>
               <Button
-                disabled={saldoPontos < produtoSelecionado.custo_pontos}
+                disabled={saldoPontos < produtoSelecionado.custo_pontos || resgatando}
                 tamanho="lg"
+                onClick={async () => {
+                  setResgatando(true);
+                  try {
+                    const { resgatarProduto } = await import("@/lib/supabase/queries/loja");
+                    await resgatarProduto(produtoSelecionado.id);
+                    toast.sucesso("Resgate realizado!", "Seu pedido foi criado. Acompanhe em Meus Pedidos.");
+                    setProdutoSelecionado(null);
+                  } catch (err: any) {
+                    toast.erro("Erro no resgate", err.message);
+                  }
+                  setResgatando(false);
+                }}
               >
                 <ShoppingBag className="h-4 w-4" />
-                {saldoPontos >= produtoSelecionado.custo_pontos ? "Resgatar Agora" : "Pontos Insuficientes"}
+                {resgatando ? "Resgatando..." : saldoPontos >= produtoSelecionado.custo_pontos ? "Resgatar Agora" : "Pontos Insuficientes"}
               </Button>
             </div>
           </div>

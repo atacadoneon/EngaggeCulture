@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChatInterface } from "@/components/chat/chat-interface";
@@ -8,6 +10,7 @@ import { usarSessao } from "@/hooks/usar-sessao";
 import { criarClienteNavegador } from "@/lib/supabase/client";
 
 export default function PaginaCriarGamificacao() {
+  const toast = usarToast();
   const { sessao } = usarSessao();
   const router = useRouter();
   const [dadosGamificacao, setDadosGamificacao] = useState<any>(null);
@@ -115,10 +118,10 @@ export default function PaginaCriarGamificacao() {
         }
       }
 
-      alert("Gamificacao salva com sucesso! Jornadas, desafios e missoes criados.");
+      toast.sucesso("Gamificacao salva com sucesso! Jornadas, desafios e missoes criados.");
       router.push("/gamificacao");
     } catch (error: any) {
-      alert("Erro ao salvar: " + error.message);
+      toast.erro("Erro", error.message);
     }
 
     setSalvando(false);

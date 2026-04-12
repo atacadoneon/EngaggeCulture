@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { Users, Plus, Search, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +20,7 @@ const STATUS_COR: Record<string, "green" | "amber" | "zinc" | "red"> = {
 };
 
 export default function PaginaColaboradores() {
+  const toast = usarToast();
   const [colaboradores, setColaboradores] = useState<any[]>([]);
   const [equipes, setEquipes] = useState<any[]>([]);
   const [departamentos, setDepartamentos] = useState<any[]>([]);
@@ -70,7 +73,7 @@ export default function PaginaColaboradores() {
       setFormNome(""); setFormEmail(""); setFormCargo(""); setFormEquipe(""); setFormDepartamento("");
       carregar();
     } catch (error: any) {
-      alert(error.message);
+      toast.erro("Erro", error.message);
     }
     setSalvando(false);
   }

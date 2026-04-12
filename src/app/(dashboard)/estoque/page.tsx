@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Warehouse, Package, AlertTriangle, ArrowUpDown, Plus } from "lucide-react";
@@ -16,6 +18,7 @@ import { listarEstoque, buscarStatsEstoque, criarMovimentacao } from "@/lib/supa
 import { cn } from "@/lib/utils";
 
 export default function PaginaEstoque() {
+  const toast = usarToast();
   const [produtos, setProdutos] = useState<any[]>([]);
   const [stats, setStats] = useState({ total_itens: 0, estoque_baixo: 0, sem_estoque: 0, total_produtos: 0 });
   const [busca, setBusca] = useState("");
@@ -52,7 +55,7 @@ export default function PaginaEstoque() {
       await criarMovimentacao({ produto_id: produtoSelecionado.id, tipo: movTipo, quantidade: parseInt(movQtd), observacoes: movObs || undefined });
       setModalAberto(false);
       carregar();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: any) { toast.erro("Erro", err.message); }
     setSalvando(false);
   }
 

@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChatInterface } from "@/components/chat/chat-interface";
@@ -8,6 +10,7 @@ import { usarSessao } from "@/hooks/usar-sessao";
 import { criarClienteNavegador } from "@/lib/supabase/client";
 
 export default function PaginaCriarCultura() {
+  const toast = usarToast();
   const { sessao } = usarSessao();
   const router = useRouter();
   const [dadosCultura, setDadosCultura] = useState<any>(null);
@@ -65,10 +68,10 @@ export default function PaginaCriarCultura() {
         }
       }
 
-      alert("Cultura salva com sucesso! Valores e rituais criados.");
+      toast.sucesso("Cultura salva com sucesso! Valores e rituais criados.");
       router.push("/cultura");
     } catch (error: any) {
-      alert("Erro ao salvar: " + error.message);
+      toast.erro("Erro", error.message);
     }
 
     setSalvando(false);

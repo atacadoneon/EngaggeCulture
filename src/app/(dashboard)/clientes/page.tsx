@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { Plus, Building, Search } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -17,6 +19,7 @@ import { listarClientesExternos, criarClienteExterno } from "@/lib/supabase/quer
 const POR_PAGINA = 20;
 
 export default function PaginaClientes() {
+  const toast = usarToast();
   const [clientes, setClientes] = useState<any[]>([]);
   const [busca, setBusca] = useState("");
   const [pagina, setPagina] = useState(1);
@@ -55,7 +58,7 @@ export default function PaginaClientes() {
       setModalAberto(false);
       setFNome(""); setFEmail(""); setFEmpresa(""); setFTelefone(""); setFRua(""); setFCidade(""); setFEstado(""); setFCep(""); setFTags("");
       carregar();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: any) { toast.erro("Erro", err.message); }
     setSalvando(false);
   }
 

@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Users, Package, ClipboardList } from "lucide-react";
@@ -20,6 +22,7 @@ const PASSOS = [
 ];
 
 export default function PaginaNovoEnvio() {
+  const toast = usarToast();
   const router = useRouter();
   const [passo, setPasso] = useState(1);
   const [destinatarios, setDestinatarios] = useState<Destinatario[]>([]);
@@ -67,7 +70,7 @@ export default function PaginaNovoEnvio() {
 
       router.push("/envios");
     } catch (error: any) {
-      alert("Erro ao criar envio: " + error.message);
+      toast.erro("Erro", error.message);
     }
 
     setEnviando(false);

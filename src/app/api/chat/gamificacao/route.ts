@@ -6,12 +6,50 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
+// Rate limiting simples em memoria
+const rateLimits = new Map<string, { count: number; resetAt: number }>();
+
+function verificarRateLimit(ip: string): boolean {
+  const agora = Date.now();
+  const limite = rateLimits.get(ip);
+
+  if (!limite || agora > limite.resetAt) {
+    rateLimits.set(ip, { count: 1, resetAt: agora + 60000 });
+    return true;
+  }
+
+  if (limite.count >= 10) return false;
+  limite.count++;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { mensagens, empresa } = await request.json();
+    // Rate limiting
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    if (!verificarRateLimit(ip)) {
+      return new Response(JSON.stringify({ erro: "Muitas requisicoes. Aguarde 1 minuto." }), { status: 429 });
+    }
 
-    if (!mensagens || !Array.isArray(mensagens)) {
+    const body = await request.json();
+    const { mensagens, empresa } = body;
+
+    // Validacao de input
+    if (!mensagens || !Array.isArray(mensagens) || mensagens.length === 0) {
       return new Response(JSON.stringify({ erro: "Mensagens invalidas" }), { status: 400 });
+    }
+
+    if (mensagens.length > 50) {
+      return new Response(JSON.stringify({ erro: "Limite de 50 mensagens por conversa" }), { status: 400 });
+    }
+
+    for (const msg of mensagens) {
+      if (!msg.papel || !msg.conteudo || typeof msg.conteudo !== "string") {
+        return new Response(JSON.stringify({ erro: "Formato de mensagem invalido" }), { status: 400 });
+      }
+      if (msg.conteudo.length > 5000) {
+        return new Response(JSON.stringify({ erro: "Mensagem muito longa (max 5000 caracteres)" }), { status: 400 });
+      }
     }
 
     const contextoEmpresa = empresa
@@ -34,16 +72,12 @@ export async function POST(request: NextRequest) {
         stream.on("text", (text) => {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ texto: text })}\n\n`));
         });
-
         stream.on("end", () => {
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
         });
-
         stream.on("error", (error) => {
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify({ erro: error.message })}\n\n`)
-          );
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ erro: error.message })}\n\n`));
           controller.close();
         });
       },

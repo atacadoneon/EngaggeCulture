@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { Plus, DollarSign, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -22,6 +24,7 @@ const STATUS_COR: Record<string, "amber" | "green" | "red" | "zinc"> = {
 const POR_PAGINA = 15;
 
 export default function PaginaFaturas() {
+  const toast = usarToast();
   const [faturas, setFaturas] = useState<any[]>([]);
   const [stats, setStats] = useState({ total_aberto: 0, total_vencido: 0, total_pago_mes: 0, qtd_abertas: 0, qtd_vencidas: 0 });
   const [abaAtiva, setAbaAtiva] = useState("todas");
@@ -62,7 +65,7 @@ export default function PaginaFaturas() {
       setModalAberto(false);
       setFDesc(""); setFValor(""); setFVenc(""); setFNF(""); setFObs("");
       carregar();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: any) { toast.erro("Erro", err.message); }
     setSalvando(false);
   }
 

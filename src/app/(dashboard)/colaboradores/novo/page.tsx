@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -13,6 +15,7 @@ import { FormSection } from "@/components/ui/form-section";
 import { criarColaborador, listarEquipes, listarDepartamentos } from "@/lib/supabase/queries/colaboradores";
 
 export default function PaginaNovoColaborador() {
+  const toast = usarToast();
   const router = useRouter();
   const [equipes, setEquipes] = useState<any[]>([]);
   const [departamentos, setDepartamentos] = useState<any[]>([]);
@@ -61,7 +64,7 @@ export default function PaginaNovoColaborador() {
       });
       router.push("/colaboradores");
     } catch (err: any) {
-      alert(err.message);
+      toast.erro("Erro", err.message);
     }
     setSalvando(false);
   }

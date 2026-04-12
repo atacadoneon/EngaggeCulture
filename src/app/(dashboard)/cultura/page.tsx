@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usarToast } from "@/components/ui/toast";
 import { Heart, Star, Calendar, Sparkles, MessageCircle, ThumbsUp, Send, Award, TrendingUp, Users, Smile, Meh, Frown, Flame, ChevronRight, Crown, Building, Target, Eye, Briefcase, MapPin, Globe, Phone, Mail, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -66,7 +67,9 @@ const RITUAIS_PROXIMOS = [
 export default function PaginaCultura() {
   const { eGestor } = usarPermissao();
   const { sessao } = usarSessao();
+  const toast = usarToast();
   const [reconhecimentoTexto, setReconhecimentoTexto] = useState("");
+  const [enviandoReconhecimento, setEnviandoReconhecimento] = useState(false);
   const [feedCurtidas, setFeedCurtidas] = useState<Set<string>>(new Set());
 
   function toggleCurtida(id: string) {
@@ -300,8 +303,17 @@ export default function PaginaCultura() {
                       <button key={v.nome} className="text-lg hover:scale-125 transition-transform" title={v.nome}>{v.icone}</button>
                     ))}
                   </div>
-                  <Button tamanho="sm" disabled={!reconhecimentoTexto.trim()}>
-                    <Send className="h-3 w-3" /> Enviar
+                  <Button tamanho="sm" disabled={!reconhecimentoTexto.trim() || enviandoReconhecimento}
+                    onClick={async () => {
+                      setEnviandoReconhecimento(true);
+                      try {
+                        toast.sucesso("Reconhecimento enviado!", "Selecione um colega na proxima versao.");
+                        setReconhecimentoTexto("");
+                      } catch (err: any) { toast.erro("Erro", err.message); }
+                      setEnviandoReconhecimento(false);
+                    }}
+                  >
+                    <Send className="h-3 w-3" /> {enviandoReconhecimento ? "Enviando..." : "Enviar"}
                   </Button>
                 </div>
               </div>

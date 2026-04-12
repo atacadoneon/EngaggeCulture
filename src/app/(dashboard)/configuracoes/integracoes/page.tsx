@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState, useEffect } from "react";
 import { Link2, Unlink, RefreshCw, CheckCircle, XCircle, Clock, AlertTriangle, Settings, Zap, FileText, Receipt, Package, ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -27,6 +29,7 @@ const ERPS = [
 ];
 
 export default function PaginaIntegracoes() {
+  const toast = usarToast();
   const { sessao } = usarSessao();
   const [integracao, setIntegracao] = useState<any>(null);
   const [logs, setLogs] = useState<any[]>([]);
@@ -80,7 +83,7 @@ export default function PaginaIntegracoes() {
       });
       setModalAberto(false);
       carregar();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: any) { toast.erro("Erro", err.message); }
     setSalvando(false);
   }
 
@@ -94,7 +97,7 @@ export default function PaginaIntegracoes() {
         body: JSON.stringify({ empresa_id: sessao.empresa.id }),
       });
       carregar();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: any) { toast.erro("Erro", err.message); }
     setSincronizando(false);
   }
 

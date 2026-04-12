@@ -1,5 +1,7 @@
 "use client";
 
+
+import { usarToast } from "@/components/ui/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -14,6 +16,7 @@ import { criarPedidoCompra } from "@/lib/supabase/queries/loja-interna";
 import { cn } from "@/lib/utils";
 
 export default function PaginaCarrinho() {
+  const toast = usarToast();
   const router = useRouter();
   const carrinho = usarCarrinho();
   const [finalizando, setFinalizando] = useState(false);
@@ -38,7 +41,7 @@ export default function PaginaCarrinho() {
       carrinho.limparCarrinho();
       setPedidoCriado(true);
     } catch (error: any) {
-      alert("Erro ao finalizar pedido: " + error.message);
+      toast.erro("Erro", error.message);
     }
     setFinalizando(false);
   }
