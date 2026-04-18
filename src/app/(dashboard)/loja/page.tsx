@@ -4,7 +4,10 @@ import { useState, useEffect } from "react";
 import { CreditCard, ShoppingBag, Star, Heart, Zap, Check, Eye, CheckCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { usarToast } from "@/components/ui/toast";
+import { usarPermissao } from "@/hooks/usar-permissao";
 import { listarProdutos } from "@/lib/supabase/queries/loja";
+import { Settings } from "lucide-react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -60,6 +63,7 @@ const PRODUTOS_DEMO = [
 export default function PaginaLoja() {
   const toast = usarToast();
   const { sessao } = usarSessao();
+  const { eGestor } = usarPermissao();
   const [busca, setBusca] = useState("");
   const [produtoSelecionado, setProdutoSelecionado] = useState<any>(null);
   const [favoritos, setFavoritos] = useState<Set<string>>(new Set());
@@ -107,6 +111,10 @@ export default function PaginaLoja() {
           <h1 className="text-2xl font-bold text-white">Loja de Recompensas</h1>
           <p className="text-zinc-400 text-sm mt-0.5">Resgate seus pontos por premios incriveis</p>
         </div>
+        <div className="flex items-center gap-3">
+          {eGestor && (
+            <Link href="/loja/admin"><Button variante="secundario"><Settings className="h-4 w-4" />Gerenciar Produtos</Button></Link>
+          )}
         {sessao && (
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-4 py-2.5 bg-violet-600/10 border border-violet-500/30 rounded-xl">
@@ -125,6 +133,7 @@ export default function PaginaLoja() {
             </div>
           </div>
         )}
+        </div>
       </div>
 
       {/* Busca */}

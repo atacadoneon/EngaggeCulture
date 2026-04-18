@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { usarToast } from "@/components/ui/toast";
-import { listarValores, listarReconhecimentos, buscarComportamentoSemana, listarFeed } from "@/lib/supabase/queries/cultura";
+import { listarValores, listarReconhecimentos, buscarComportamentoSemana, listarFeed, criarReconhecimento } from "@/lib/supabase/queries/cultura";
+import { listarColaboradores } from "@/lib/supabase/queries/colaboradores";
 import { Heart, Star, Calendar, Sparkles, MessageCircle, ThumbsUp, Send, Award, TrendingUp, Users, Smile, Meh, Frown, Flame, ChevronRight, Crown, Building, Target, Eye, Briefcase, MapPin, Globe, Phone, Mail, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -71,6 +72,8 @@ export default function PaginaCultura() {
   const toast = usarToast();
   const [reconhecimentoTexto, setReconhecimentoTexto] = useState("");
   const [enviandoReconhecimento, setEnviandoReconhecimento] = useState(false);
+  const [colaboradoresLista, setColaboradoresLista] = useState<any[]>([]);
+  const [colaboradorSelecionado, setColaboradorSelecionado] = useState("");
   const [valoresDB, setValoresDB] = useState<any[]>([]);
   const [reconhecimentosDB, setReconhecimentosDB] = useState<any[]>([]);
   const [feedDB, setFeedDB] = useState<any[]>([]);
@@ -89,6 +92,11 @@ export default function PaginaCultura() {
         setReconhecimentosDB(r || []);
         setFeedDB(f || []);
         setComportamentoSemanaDB(cs);
+      } catch {}
+      // Carregar colaboradores pra seletor
+      try {
+        const colabs = await listarColaboradores({ status: "ativo" });
+        setColaboradoresLista(colabs || []);
       } catch {}
     }
     carregar();
@@ -313,10 +321,21 @@ export default function PaginaCultura() {
                 {sessao?.colaborador.nome.charAt(0) || "?"}
               </div>
               <div className="flex-1">
+                {/* Seletor de colega */}
+                <select
+                  value={colaboradorSelecionado}
+                  onChange={(e) => setColaboradorSelecionado(e.target.value)}
+                  className="w-full mb-2 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+                >
+                  <option value="">Selecione quem voce quer reconhecer...</option>
+                  {colaboradoresLista.filter((c: any) => c.id !== sessao?.colaborador.id).map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.nome} — {c.cargo || c.email}</option>
+                  ))}
+                </select>
                 <textarea
                   value={reconhecimentoTexto}
                   onChange={(e) => setReconhecimentoTexto(e.target.value)}
-                  placeholder="Reconheca alguem do time... Quem merece destaque hoje?"
+                  placeholder="Escreva o reconhecimento... Por que essa pessoa merece destaque?"
                   rows={2}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none"
                 />
@@ -326,13 +345,19 @@ export default function PaginaCultura() {
                       <button key={v.nome} className="text-lg hover:scale-125 transition-transform" title={v.nome}>{v.icone}</button>
                     ))}
                   </div>
-                  <Button tamanho="sm" disabled={!reconhecimentoTexto.trim() || enviandoReconhecimento}
+                  <Button tamanho="sm" disabled={!reconhecimentoTexto.trim() || !colaboradorSelecionado || enviandoReconhecimento}
                     onClick={async () => {
                       setEnviandoReconhecimento(true);
                       try {
-                        toast.sucesso("Reconhecimento enviado!", "Selecione um colega na proxima versao.");
+                        await criarReconhecimento({
+                          para_colaborador_id: colaboradorSelecionado,
+                          mensagem: reconhecimentoTexto,
+                          moedas_dadas: 10,
+                        });
+                        toast.sucesso("Reconhecimento enviado!", "Moedas creditadas ao colega.");
                         setReconhecimentoTexto("");
-                      } catch (err: any) { toast.erro("Erro", err.message); }
+                        setColaboradorSelecionado("");
+                      } catch (err: any) { toast.erro("Erro ao enviar", err.message); }
                       setEnviandoReconhecimento(false);
                     }}
                   >

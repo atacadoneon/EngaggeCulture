@@ -5,9 +5,9 @@ import { Settings, Building, Palette, Coins, Link2, Shield, CreditCard } from "l
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 const CONFIG_ITEMS = [
-  { nome: "Empresa", desc: "Nome, logo, branding", icone: Building, cor: "text-violet-400", href: "/configuracoes" },
-  { nome: "Aparencia", desc: "Cores, tema, personalizacao", icone: Palette, cor: "text-pink-400", href: "/configuracoes" },
-  { nome: "Moeda", desc: "Nome, icone, conversao", icone: Coins, cor: "text-amber-400", href: "/configuracoes" },
+  { nome: "Empresa", desc: "Nome, logo, branding", icone: Building, cor: "text-violet-400", href: "/configuracoes/empresa" },
+  { nome: "Aparencia", desc: "Cores, tema, personalizacao", icone: Palette, cor: "text-pink-400", href: "/configuracoes/empresa" },
+  { nome: "Moeda", desc: "Nome, icone, conversao", icone: Coins, cor: "text-amber-400", href: "/configuracoes/moeda" },
   { nome: "Integracoes", desc: "Tiny ERP, Omie, Bling", icone: Link2, cor: "text-blue-400", href: "/configuracoes/integracoes" },
   { nome: "Seguranca", desc: "Perfis, permissoes, 2FA", icone: Shield, cor: "text-emerald-400", href: "/configuracoes" },
   { nome: "Plano e Cobranca", desc: "Assinatura e limites", icone: CreditCard, cor: "text-zinc-400", href: "/configuracoes" },

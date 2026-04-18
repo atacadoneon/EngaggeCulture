@@ -87,8 +87,15 @@ export default function PaginaGamificacao() {
   const diasRestantes = Math.ceil((new Date(DESAFIO_ATIVO.fim_em).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
   const progressoDesafio = Math.round((DESAFIO_ATIVO.meu_valor / DESAFIO_ATIVO.meta) * 100);
 
-  function completarMissao(id: string) {
-    setMissoes((prev) => prev.map((m) => m.id === id ? { ...m, concluida: true } : m));
+  async function completarMissao(id: string) {
+    try {
+      const hoje = new Date().toISOString().split("T")[0];
+      await concluirMissao(id, hoje);
+      setMissoes((prev) => prev.map((m) => m.id === id ? { ...m, concluida: true } : m));
+      toast.sucesso("Missao concluida!", "Pontos creditados.");
+    } catch (err: any) {
+      toast.erro("Erro ao completar missao", err.message);
+    }
   }
 
   return (
