@@ -98,8 +98,19 @@ export default function PaginaLojaAdmin() {
                   <td className="px-5 py-3 text-sm text-right text-white">{p.estoque !== null ? p.estoque : "Ilimitado"}</td>
                   <td className="px-5 py-3"><Badge cor={p.ativo ? "green" : "red"}>{p.ativo ? "Ativo" : "Inativo"}</Badge></td>
                   <td className="px-5 py-3"><Dropdown itens={[
-                    { label: "Editar", icone: Edit, onClick: () => {} },
-                    { label: "Desativar", icone: Trash2, onClick: () => {}, perigo: true },
+                    { label: "Editar", icone: Edit, onClick: () => {
+                      setFNome(p.nome); setFDesc(p.descricao || ""); setFCat(p.categoria);
+                      setFPontos(String(p.custo_pontos || "")); setFEstoque(p.estoque !== null ? String(p.estoque) : "");
+                      setFImagem(p.imagem_url || ""); setModalAberto(true);
+                    }},
+                    { label: p.ativo ? "Desativar" : "Ativar", icone: Trash2, onClick: async () => {
+                      try {
+                        const { atualizarProduto } = await import("@/lib/supabase/queries/loja");
+                        await atualizarProduto(p.id, { ativo: !p.ativo } as any);
+                        toast.sucesso(p.ativo ? "Produto desativado" : "Produto ativado");
+                        carregar();
+                      } catch (err: any) { toast.erro("Erro", err.message); }
+                    }, perigo: p.ativo },
                   ]} /></td>
                 </tr>
               ))}
